@@ -3,9 +3,13 @@ import type { RouterConfig } from 'nuxt/schema'
 export default {
   scrollBehavior(to, from, savedPosition) {
     // If the browser has a saved position (e.g. back/forward navigation), restore it
-
     if (savedPosition) {
       return savedPosition
+    }
+
+    // Scroll to top when main search query changes
+    if (to.path === '/search' && to.query.q !== from.query.q) {
+      return { left: 0, top: 0 }
     }
 
     // Preserve the current viewport for query-only updates on pages that opt in,
@@ -20,7 +24,7 @@ export default {
       return {
         el: to.hash,
         behavior: 'smooth',
-        top: typeof scrollMargin == 'number' ? scrollMargin : 70,
+        top: typeof scrollMargin === 'number' ? scrollMargin : 70,
       }
     }
 
